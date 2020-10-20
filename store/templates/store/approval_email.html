@@ -1,5 +1,33 @@
 {% autoescape off %}
 Hi Kevin,
-Please click on the link to confirm your registration
+Someone just registered on www.donerdiamonds.com website!
+User details are as follows:
+<table>
+<thead>
+  <tr>
+    <th>Company name:<br></th>
+    <th></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Full name of the user:<br></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Username:</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Address:</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Phone number:</td>
+    <td></td>
+  </tr>
+</tbody>
+</table>
+Please click on the link to activate user.
 http://{{domain}}{% url 'activate-user' user.pk %}
 {% endautoescape %}

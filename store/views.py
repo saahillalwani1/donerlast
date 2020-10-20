@@ -30,7 +30,7 @@ def store(request):
 
 	products = Product.objects.filter( ordered__exact = False )
 	jewellery = list(Jewellery.objects.all())
-	random_jewellery = random.sample(jewellery, 3)
+	random_jewellery = random.sample(jewellery, 2)
 	print(random_jewellery)
 	context = {'products':products, 'cartItems':cartItems, 'jewellery': random_jewellery}
 	return render(request, 'store/store.html', context)

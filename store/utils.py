@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage
 from django.utils.html import strip_tags
 
 
-SHIPPING_CHARGES = 100
+SHIPPING_CHARGES = 0
 OWNER_MAIL = "hardikkatehara@gmail.com"
 
 
