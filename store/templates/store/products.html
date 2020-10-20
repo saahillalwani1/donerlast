@@ -1,0 +1,463 @@
+{% extends 'store/main.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+<style>
+table caption {
+	padding: .5em 0;
+}
+
+table.dataTable th,
+table.dataTable td {
+  white-space: nowrap;
+}
+
+.p {
+  text-align: center;
+  padding-top: 140px;
+  font-size: 14px;
+}
+	.image-checkbox
+	{
+		cursor: pointer;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		border: 2px solid rgb(179, 177, 177);
+		border-radius: 10px;
+		outline: 0;
+		margin-right: 5px;
+	}
+	.image-checkbox:hover{
+		border-color: skyblue;
+		border-radius: 10px;
+		background-color: skyblue;
+	}
+
+		.image-checkbox input[type="checkbox"]
+		{
+			display: none;
+		}
+
+	.image-checkbox-checked
+	{
+		background-color: skyblue;
+		border-radius: 10px;
+	}
+	.btns{
+		margin-right: 5px;
+		margin-bottom: 5px;
+	}
+	.overlay-shape {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100%;
+		width: 100%;
+		opacity: 0;
+		transition: .5s ease;
+		background-color: #008CBA;
+	}
+	.diamond-shape:hover .overlay-shape{
+		opacity: 0.6;
+	}
+	.button-filter{
+		border: 1px solid lightgray;
+	}
+	.button-filter:hover{
+		background-color: skyblue;
+	.button-filter-checked{
+		background-color: skyblue;
+	}
+</style>
+	<div id="breadcrumbs">
+		<div class="container">
+			<ul>
+				<li><a href="{% url 'store' %}">Home</a></li>
+				<li>Product results</li>
+			</ul>
+		</div>
+	}
+		<!-- / container -->
+	</div>
+	<!-- / body -->
+
+	<div id="body">
+			<div class="products-wrap container">
+				<form method="GET" id = "filter_form">
+					{{ filter.form.shape.label_tag }}
+
+					<div class="row">
+						{% for choice in filter.form.shape %}
+							<label class="image-checkbox">
+								<img class="img-responsive" src = "{% static choice.choice_label %}" style = "height:  50px;">
+								{{ choice.tag }}
+								<div class="mask ">
+								</div>
+
+							</label>
+							<br>
+						{% endfor %}
+					</div>
+
+					<p>Size Range:</p>
+					<div class="form-group row" style="padding-left:20px ;">
+						<div class="col-sm-3 limit" placeholder="Carat from">{% render_field filter.form.carat_gt class="form-control" type="number" step="0.1" placeholder="From size"%}</div>
+						<div class="col-sm-3 limit" placeholder="Carat to">{% render_field filter.form.carat_lt class="form-control" type="number" step="0.1" placeholder="To size" %}</div>
+					</div>
+
+					{{ filter.form.color.label_tag }}
+					<div class="row">
+						{% for choice in filter.form.color %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter ">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+						{% endfor %}
+					</div>
+					{{ filter.form.clarity.label_tag }}
+					<div class="row">
+						{% for choice in filter.form.clarity %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+						{% endfor %}
+					</div>
+
+					{{ filter.form.lab.label_tag }}
+					<div class="row">
+						{% for choice in filter.form.lab %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+					{% endfor %}
+					</div>
+					<br>
+					<p>Cut: </p>
+					<div class="row">
+						{% for choice in filter.form.cut %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+					{% endfor %}
+				</div>
+				<br>
+					<p> Polish: </p>
+					<div class="row">
+						{% for choice in filter.form.pol %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+					{% endfor %}
+					</div>
+					<br>
+					<p> Symmetry: </p>
+					<div class="row">
+						{% for choice in filter.form.sym %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+					{% endfor %}
+					</div>
+
+					<br>
+					<p> Fluroscence: </p>
+					<div class="row">
+
+						{% for choice in filter.form.fl %}
+						<div class="btn-group-toggle btns" data-toggle="buttons">
+							<label class="btn btn-light button-filter">
+								{{ choice.tag }}
+								{{ choice.choice_label }}
+								</label>
+						</div>
+					{% endfor %}
+					</div>
+
+
+					<br>
+					<P>Total Amount:</p>
+
+					<div class="form-group row">
+						<div class="col-sm-3">{% render_field filter.form.price_gt class="form-control" placeholder="Amount from" %}</div>
+						<div class="col-sm-3">{% render_field filter.form.price_lt class="form-control" placeholder="Amount to" %}</div>
+					</div>
+					<br>
+					<p>Discount (%):</p>
+					<div class="form-group row">
+						<div class="col-sm-3">{% render_field filter.form.diss_gt class="form-control" placeholder="Discount(%) from"  %}</div>
+						<div class="col-sm-3">{% render_field filter.form.diss_lt class="form-control" placeholder="Discount(%) to"%}</div>
+					</div>
+					<br>
+
+
+					<button type = "submit" class="btn btn-primary">Search</button>
+				</form>
+			</div>
+			<br>
+			<div class="container">
+				<div class="table-responsive" style="font-family:VarelaRound;">
+					<table class="table table-bordered table-hover dt-responsive" id="dataTable" width="100%" cellspacing="0" style="font-size:12px; text-align: center;">
+						<thead style="background-color: lightblue;">
+						<tr>
+							<th>Select</th>
+							<th>View</th>
+							<th>Add to Cart</th>
+							<th>Lot_no</th>
+							<th>Lab</th>
+							<th>Shape</th>
+							<th>Carat</th>
+							<th>Color</th>
+							<th>Clarity</th>
+							<th>Cut</th>
+							<th>Polish</th>
+							<th>Symmetry</th>
+							<th>Flouroscence</th>	
+							<th>Price</th>
+							<th>Measurement</th>
+							<th>Table</th>
+							<th>Depth</th>
+							<th>Rap</th>
+							<th>Cul</th>
+							<th>Girdle</th>
+						</tr>
+						</thead>
+
+						<tbody>
+						{% for product in products %}
+						{% if not product.ordered %}
+						<tr>
+							<td><input type="checkbox" name="product" value="{{ product.pk }}" class = "product-cbox"/></td>
+							<td>
+							<a href = "{% url 'view' product.pk %}">View</a>
+							</td>
+							<td>
+							<a href = "{% url 'add' product.pk %}">Add to cart</a>
+							</td>
+							<td><h3></h3>{{product.lot_no}}</h3></td>
+							<td>{{product.lab }}</td>
+							<td>{{product.get_pseudo_shape_display }}</td>
+							<td>{{product.carat |floatformat:2 }}</td>
+							<td>{{product.color}}</td>
+							<td>{{product.clarity}}</td>
+							<td>{{product.cut }}</td>
+							<td>{{product.pol }}</td>
+							<td>{{product.sym }}</td>
+							<td>{{product.fl }}</td>
+							<td>{{product.price_total }}</td>
+							<td>{{product.measurement }}</td>
+							<td>{{product.tbl }}</td>
+							<td>{{product.dept }}</td>
+							<td>{{product.rap }}</td>
+							<td>{{product.cul }}</td>
+							<td>{{product.girdle }}</td>
+						</tr>
+						{% endif %}
+					{% endfor %}
+
+						</tbody>
+					</table>
+				<center>	<a id = "enquiry-btn" style="margin:5px; color: white;" class="btn-grey">Enquiry of Selected Diamonds</a>
+					<a id = "cart-btn" style="margin:5px; color: white;" class="btn-grey">Add Selected Items to cart</a>
+				</center>
+					</div>
+				
+			</div>
+	</div>
+	<!-- / body -->
+{% endblock content %}
+
+
+<div class="widget">
+<h3>Products per page:</h3>
+<fieldset>
+	<input checked type="checkbox">
+	<label>8</label>
+	<input type="checkbox">
+	<label>16</label>
+	<input type="checkbox">
+	<label>32</label>
+</fieldset>
+</div>
+<div class="widget">
+<h3>Sort by:</h3>
+<fieldset>
+	<input checked type="checkbox">
+	<label>Popularity</label>
+	<input type="checkbox">
+	<label>Date</label>
+	<input type="checkbox">
+	<label>Price</label>
+</fieldset>
+</div>
+<div class="widget">
+<h3>Condition:</h3>
+<fieldset>
+	<input checked type="checkbox">
+	<label>New</label>
+	<input type="checkbox">
+	<label>Used</label>
+</fieldset>
+</div>
+<div class="widget">
+<h3>Price range:</h3>
+<fieldset>
+	<div id="price-range"></div>
+</fieldset>
+</div>
+
+
+<div id="content">
+					<section class="products">
+					{% for product in products %}
+						<article>
+							<a href="product.html"><img src="{{product.imageURL}}" alt=""></a>
+							<h3><a href="product.html">{{product.lot_no}}</a></h3>
+							<h4><a href="product.html">${{product.price}}</a></h4>
+							<a data-product="{{product.id}}" data-action="add" class="btn-add" href = "{% url 'add2' product.pk %}">Add to cart</a>
+						</article>
+					{% endfor %}
+					</section>
+				</div>
+
+
+				{% block javascript %}
+				<script type="text/javascript">
+
+					$(document).ready(function() {
+
+						var arr = []
+
+						var event_handler = function(){
+							console.log("clicked")
+							console.log( $(this).prop('checked') )
+							if ( $(this).prop('checked') )
+							{
+								arr.push( $(this).val() )
+								console.log("add " + $(this).val())
+							}
+							else 
+							{
+								let index = arr.indexOf($(this).val())
+								if (index > -1)
+								{
+									arr.splice(index, 1);
+									console.log("remove " + $(this).val())
+								}
+						}
+
+						
+					}
+
+					$(document).on('click', '.product-cbox', event_handler)
+
+					$('#enquiry-btn').click(function(){
+
+							let myurl = "/ajax/enquiry/";
+							console.log(arr)
+							
+							$.ajax({
+								type: "POST",
+								url : myurl,
+								data : {"products": JSON.stringify(arr)},
+								dataType: 'json'
+							})
+							
+						})
+
+					$('#cart-btn').click(function(){
+
+							let myurl = "/ajax/cart/";
+							console.log(arr)
+							
+							$.ajax({
+								type: "POST",
+								url : myurl,
+								data : {"products": JSON.stringify(arr)},
+								dataType: 'json',
+								success: function(data){
+									console.log(data.messages)
+									for (message of data.messages){
+										alert(message)
+									}
+								}
+							})
+							
+						})
+
+					});
+
+					
+
+					
+
+
+
+					jQuery(function ($) {
+						$(".image-checkbox").each(function () {
+							if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+								$(this).addClass('image-checkbox-checked');
+							}
+							else {
+								$(this).removeClass('image-checkbox-checked');
+							}
+						});
+
+						$(".image-checkbox").on("click", function (e) {
+							if ($(this).hasClass('image-checkbox-checked')) {
+								$(this).removeClass('image-checkbox-checked');
+								$(this).find('input[type="checkbox"]').first().removeAttr("checked");
+							}
+							else {
+								$(this).addClass('image-checkbox-checked');
+								$(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+							}
+
+							e.preventDefault();
+						});
+					});
+
+					jQuery(function ($) {
+						$(".button-filter").each(function () {
+							if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+								$(this).addClass('button-filter-checked');
+							}
+							else {
+								$(this).removeClass('button-filter-checked');
+							}
+						});
+
+						$(".button-filter").on("click", function (c) {
+							if ($(this).hasClass('button-filter-checked')) {
+								$(this).removeClass('button-filter-checked');
+								$(this).find('input[type="checkbox"]').first().removeAttr("checked");
+							}
+							else {
+								$(this).addClass('button-filter-checked');
+								$(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+							}
+
+							c.preventDefault();
+						});
+					});
+				</script>
+				{% endblock %}
