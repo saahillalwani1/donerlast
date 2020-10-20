@@ -5,25 +5,25 @@ User details are as follows:
 <table>
 <thead>
   <tr>
-    <th>Company name:<br></th>
+    <th>Company name: {{ user.customer.company_name }}<br></th>
     <th></th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td>Full name of the user:<br></td>
+    <td>Full name of the user: {{ user.customer.fname }} {{ user.customer.lname }}<br></td>
     <td></td>
   </tr>
   <tr>
-    <td>Username:</td>
+    <td>Username: {{ user.username }}</td>
     <td></td>
   </tr>
   <tr>
-    <td>Address:</td>
+    <td>Address: {{ user.customer.shippingaddress.state }}, {{ user.customer.shippingaddress.country }}({{ user.customer.shippingaddress.zip_code }})</td>
     <td></td>
   </tr>
   <tr>
-    <td>Phone number:</td>
+    <td>Phone number: {{ user.customer.mobile_no }}</td>
     <td></td>
   </tr>
 </tbody>
