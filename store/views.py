@@ -212,7 +212,7 @@ def register_user(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            sendOwnerApprovalMail(request, user)
+
 
             customer = form1.save(commit = False)
             customer.user = user
@@ -222,6 +222,7 @@ def register_user(request):
             address.customer = user.customer
             address.save()
 
+            sendOwnerApprovalMail(request, user)
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=raw_password)
@@ -360,17 +361,17 @@ def ajax_cart(request):
 def activate_user(request, pk):
 	if request.user.is_superuser:
 		try:
-			user = User.objects.get(pk=pk)
+			new_user = User.objects.get(pk=pk)
 		except:
 			return HttpResponse('Invalid Request')
 		if request.method == 'POST':
-			user.is_active = True
-			user.save()
-			sendUserApprovalMail(request, user)
+			new_user.is_active = True
+			new_user.save()
+			sendUserApprovalMail(request, new_user)
 			messages.success(request, "Activated successfully")
 
 		context = {
-			'user': user
+			'new_user': new_user
 		}
 
 		return render(request, 'store/activate_user.html', context)
